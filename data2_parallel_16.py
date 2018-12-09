@@ -1,23 +1,23 @@
-#!/usr/bin/env python3
+!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-data1 = Banknote Auth.
-
+data2 = Australina credit
 """
+
 from graph_parallel_functions import *
 
-data_name = "Banknote Auth."
-result_name = "Result_Data1_parallel_16.csv"
-runtime_name = "Runtime_data1_16_parallel.csv"
+data_name = "Australina credit"
+result_name = "Result_Data2_16.csv"
+runtime_name = "Runtime_data2_16.csv"
+url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
 
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00267/data_banknote_authentication.txt"
-data = pd.read_csv(url, header = None)
+data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
 
+# setting data precision  
 precisionX = 'float16'
 precisionY = 'int8'
 
 X = data.iloc[:,:-1]
-
 min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-1, 1)) # Normalizing data between -1 and 1
 X = pd.DataFrame(min_max_scaler.fit_transform(X))
 X = X.astype(precisionX)
@@ -38,7 +38,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10 
+k = 10
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []

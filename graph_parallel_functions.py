@@ -151,7 +151,7 @@ def support_edges(X_train, y_train, float_type, int_type):
   
   Adj_matrix = get_adjacency(X_train, int_type, float_type)
   
-  borda = get_borda(y_train, Adj_matrix, int_type = precisionY)
+  borda = get_borda(y_train, Adj_matrix, int_type)
   X_suporte, y_suporte = get_arestas_suporte(X_train, y_train, borda, Adj_matrix, int_type)
   
   arestas_suporte = np.c_[X_suporte, y_suporte]
@@ -164,7 +164,7 @@ def support_edges(X_train, y_train, float_type, int_type):
 def classify_data(X_test, y_test, arestas_suporte, int_type):
   
   X_suporte = arestas_suporte[:,:-1]
-  y_suporte = arestas_suporte[:,-1]
+  #y_suporte = arestas_suporte[:,-1]
   nrow = X_test.shape[0]
   dist_test = distance_matrix(X_test, X_suporte) # compute the distance from the sample to the support egdes
 
@@ -185,7 +185,7 @@ def compute_AUC(y_test, y_hat):
   return roc_auc
 
 # Parallel graph method:
-def parallel_graph(X_train, y_train, split_size, float_precision = precisionX, int_precision = precisionY):
+def parallel_graph(X_train, y_train, split_size, float_precision, int_precision):
   data_train = np.c_[X_train, y_train]
   np.random.shuffle(data_train)
 
@@ -198,7 +198,7 @@ def parallel_graph(X_train, y_train, split_size, float_precision = precisionX, i
     y_train = data.iloc[:, -1]
 
     # Finding the support edges from this slot of data:
-    arestas_suporte = support_edges(X_train, y_train, precisionX, precisionY)
+    arestas_suporte = support_edges(X_train, y_train, float_precision, int_precision)
 
     arestas_suporte_final.append(arestas_suporte)
     

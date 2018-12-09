@@ -1,35 +1,37 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-data1 = Banknote Auth.
+data3 = fertility
 
 """
 from graph_parallel_functions import *
 
-data_name = "Banknote Auth."
-result_name = "Result_Data1_parallel_16.csv"
-runtime_name = "Runtime_data1_16_parallel.csv"
+data_name = "Fertility.csv"
+result_name = "Result_Data3_16.csv"
+runtime_name = "Runtime_data3_16.csv"
 
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00267/data_banknote_authentication.txt"
+# Processing the data
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00244/fertility_Diagnosis.txt'
 data = pd.read_csv(url, header = None)
 
+# setting data precision  
 precisionX = 'float16'
 precisionY = 'int8'
 
 X = data.iloc[:,:-1]
-
 min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-1, 1)) # Normalizing data between -1 and 1
 X = pd.DataFrame(min_max_scaler.fit_transform(X))
 X = X.astype(precisionX)
 X_type = X.dtypes
 
 y = data.iloc[:,-1].copy()
-
+y = y.astype('category')
+y = y.cat.codes
 y[y == 0] = -1
 y = y.astype(precisionY)
 y_type = y.dtypes
 
-print("The {} dataset has {} samples and its bit precision is {} for the X data and {} for y data".format(data_name, X.shape[0], X_type[1], y_type ))
+print("The dataset {} has {} samples and its bit precision is {} for the X data and {} for y data".format(data_name, X.shape[0], X_type[4], y_type ))
 
 # Computing the Adjacency Matrix:
 Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
@@ -38,7 +40,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10 
+k = 4
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []

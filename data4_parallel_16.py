@@ -38,7 +38,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10 
+k = 4
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []
@@ -49,13 +49,17 @@ for train_index, test_index in kf.split(X_new):
 
     X_train, X_test = X_new.iloc[train_index], X_new.iloc[test_index]
     y_train, y_test = y_new.iloc[train_index], y_new.iloc[test_index]
-    
-    split_size = round(X_train.shape[0]/50) # 50 for small datasets and 100 for larger data
-    print("The {} data was divided in {} slots \n".format(data_name, split_size))
 
+    # define the slot size
+    if X_train.shape[0] > 400:
+        split_size = round(X_train.shape[0]/100)
+    else:
+        split_size = round(X_train.shape[0]/50)
+    
+    
     if split_size > 1:    
         # Find the new data set from the support edges 
-        X_train_new, y_train_new = parallel_graph(X_train, y_train, split_size)
+        X_train_new, y_train_new = parallel_graph(X_train, y_train, split_size, precisionX, precisionY)
     else:
         print("Data too small")
         X_train_new = X_train
@@ -75,6 +79,8 @@ for train_index, test_index in kf.split(X_new):
     print("The overall model running time is {0:.2f} seconds \n".format(final_time))
     
     runtime.append(final_time)
+
+print("The {} data was divided in {} slots \n".format(data_name, split_size))
 
 results = pd.DataFrame(results)
 results.to_csv(result_name, sep='\t', encoding='utf-8')

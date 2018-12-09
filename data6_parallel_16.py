@@ -1,31 +1,38 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-data1 = Banknote Auth.
+data6 = Breast cancer
 
 """
 from graph_parallel_functions import *
 
-data_name = "Banknote Auth."
-result_name = "Result_Data1_parallel_16.csv"
-runtime_name = "Runtime_data1_16_parallel.csv"
+data_name = "Breast cancer"
+result_name = "Result_Data6_16.csv"
+runtime_name = "Runtime_data6_16.csv"
 
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00267/data_banknote_authentication.txt"
-data = pd.read_csv(url, header = None)
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.data'
+data1 = pd.read_csv(url, sep=',', header=None, skiprows=1)
 
+data = data1.iloc[:,1:].copy() # the first is the id
+
+# setting data precision  
 precisionX = 'float16'
 precisionY = 'int8'
 
-X = data.iloc[:,:-1]
+# converting object data into category dtype
+data.iloc[:,5] = data.iloc[:,5].astype('category') 
+# encoding labels
+data.iloc[:,5] = data.iloc[:,5].cat.codes
 
+X = data.iloc[:,:-1]
 min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-1, 1)) # Normalizing data between -1 and 1
 X = pd.DataFrame(min_max_scaler.fit_transform(X))
 X = X.astype(precisionX)
 X_type = X.dtypes
 
-y = data.iloc[:,-1].copy()
-
-y[y == 0] = -1
+y = data.iloc[:,-1].copy() #  Class: (2 for benign, 4 for malignant cancer)
+y[y == 2] = 1
+y[y == 4] = -1
 y = y.astype(precisionY)
 y_type = y.dtypes
 
@@ -38,7 +45,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10 
+k = 10
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []
