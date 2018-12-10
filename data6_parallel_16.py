@@ -7,8 +7,8 @@ data6 = Breast cancer
 from graph_parallel_functions import *
 
 data_name = "Breast cancer"
-result_name = "Result_Data6_16.csv"
-runtime_name = "Runtime_data6_16.csv"
+result_name = "Result_Data6_parallel_16.csv"
+runtime_name = "Runtime_data6_16_parallel.csv"
 
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.data'
 data1 = pd.read_csv(url, sep=',', header=None, skiprows=1)
@@ -86,6 +86,7 @@ for train_index, test_index in kf.split(X_new):
     print("The overall model running time is {0:.2f} seconds \n".format(final_time))
     
     runtime.append(final_time)
+    results.append(AUC)
 
 print("The {} data was divided in {} slots \n".format(data_name, split_size))
 

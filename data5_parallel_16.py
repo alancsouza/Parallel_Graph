@@ -7,8 +7,8 @@ data5 = diabetes
 from graph_parallel_functions import *
 
 data_name = "diabetes"
-result_name = "Result_Data5_16.csv"
-runtime_name = "Runtime_data5_16.csv"
+result_name = "Result_Data5_parallel_16.csv"
+runtime_name = "Runtime_data5_16_parallel.csv"
 
 url = 'https://raw.githubusercontent.com/alancsouza/research_project/master/datasets/diabetes.csv'
 data = pd.read_csv(url)
@@ -78,6 +78,7 @@ for train_index, test_index in kf.split(X_new):
     print("The overall model running time is {0:.2f} seconds \n".format(final_time))
     
     runtime.append(final_time)
+    results.append(AUC)
 
 print("The {} data was divided in {} slots \n".format(data_name, split_size))
 

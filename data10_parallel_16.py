@@ -1,32 +1,32 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-data2 = Australian credit
+data10 = Parkinson
+
 """
 
 from graph_parallel_functions import *
 
-data_name = "Australian credit"
-result_name = "Result_Data2_parallel_16.csv"
-runtime_name = "Runtime_data2_16_parallel.csv"
+data_name = "Parkinson"
+result_name = "Result_Data10_parallel_16.csv"
+runtime_name = "Runtime_data10_parallel_16.csv"
 
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
-
-data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/parkinsons/parkinsons.data'
+data1 = pd.read_csv(url)
+data = data1.copy()
+data.info()
 
 # setting data precision  
 precisionX = 'float16'
 precisionY = 'int8'
 
-X = data.iloc[:,:-1]
+X = data.drop(['name', 'status'], axis = 1)
 min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-1, 1)) # Normalizing data between -1 and 1
 X = pd.DataFrame(min_max_scaler.fit_transform(X))
 X = X.astype(precisionX)
 X_type = X.dtypes
 
-y = data.iloc[:,-1].copy()
+y = data.loc[:,'status'].copy()
 
-y[y == 0] = -1
+y[y==0] = -1
 y = y.astype(precisionY)
 y_type = y.dtypes
 
@@ -39,7 +39,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10
+k = 4
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []

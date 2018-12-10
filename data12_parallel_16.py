@@ -1,18 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-data2 = Australian credit
+data12 = Statlog heart
+
 """
 
 from graph_parallel_functions import *
 
-data_name = "Australian credit"
-result_name = "Result_Data2_parallel_16.csv"
-runtime_name = "Runtime_data2_16_parallel.csv"
+data_name = "Stalog heart"
+result_name = "Result_Data12_parallel_16.csv"
+runtime_name = "Runtime_data12_parallel_16.csv"
 
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
-
-data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/heart/heart.dat'
+data = pd.read_csv(url,sep='\s+', header=None, skiprows=1)
 
 # setting data precision  
 precisionX = 'float16'
@@ -26,7 +24,7 @@ X_type = X.dtypes
 
 y = data.iloc[:,-1].copy()
 
-y[y == 0] = -1
+y[y == 2] = -1
 y = y.astype(precisionY)
 y_type = y.dtypes
 
@@ -39,7 +37,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10
+k = 4
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []

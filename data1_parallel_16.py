@@ -79,6 +79,7 @@ for train_index, test_index in kf.split(X_new):
     print("The overall model running time is {0:.2f} seconds \n".format(final_time))
     
     runtime.append(final_time)
+    results.append(AUC)
 
 print("The {} data was divided in {} slots \n".format(data_name, split_size))
 

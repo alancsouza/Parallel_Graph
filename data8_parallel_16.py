@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
-data2 = Australian credit
+data8 = German Credit.
+
 """
 
 from graph_parallel_functions import *
 
-data_name = "Australian credit"
-result_name = "Result_Data2_parallel_16.csv"
-runtime_name = "Runtime_data2_16_parallel.csv"
+data_name = "German Credit."
+result_name = "Result_Data8_parallel_16.csv"
+runtime_name = "Runtime_data8_parallel_16.csv"
 
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
-
-data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data-numeric'
+data = pd.read_fwf(url, header = None)
 
 # setting data precision  
 precisionX = 'float16'
@@ -25,8 +26,7 @@ X = X.astype(precisionX)
 X_type = X.dtypes
 
 y = data.iloc[:,-1].copy()
-
-y[y == 0] = -1
+y[y == 2] = -1
 y = y.astype(precisionY)
 y_type = y.dtypes
 

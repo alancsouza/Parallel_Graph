@@ -1,18 +1,19 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-data2 = Australian credit
+data13 = ILPD
+
 """
 
 from graph_parallel_functions import *
 
-data_name = "Australian credit"
-result_name = "Result_Data2_parallel_16.csv"
-runtime_name = "Runtime_data2_16_parallel.csv"
+data_name = "ILPD"
+result_name = "Result_Data13_parallel_16.csv"
+runtime_name = "Runtime_data13_parallel_16.csv"
 
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
+url = 'https://raw.githubusercontent.com/alancsouza/research_project/master/datasets/Indian%20Liver%20Patient%20Dataset%20(ILPD).csv'
+data = pd.read_csv(url, header = None)
 
-data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+data.iloc[:,1] = data.iloc[:,1].astype('category').cat.codes
+data = data.fillna(0)
 
 # setting data precision  
 precisionX = 'float16'
@@ -26,7 +27,7 @@ X_type = X.dtypes
 
 y = data.iloc[:,-1].copy()
 
-y[y == 0] = -1
+y[y == 2] = -1
 y = y.astype(precisionY)
 y_type = y.dtypes
 

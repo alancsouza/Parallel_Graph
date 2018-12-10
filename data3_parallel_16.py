@@ -7,8 +7,8 @@ data3 = fertility
 from graph_parallel_functions import *
 
 data_name = "Fertility.csv"
-result_name = "Result_Data3_16.csv"
-runtime_name = "Runtime_data3_16.csv"
+result_name = "Result_Data3_parallel_16.csv"
+runtime_name = "Runtime_data3_16_parallel.csv"
 
 # Processing the data
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00244/fertility_Diagnosis.txt'
@@ -81,6 +81,7 @@ for train_index, test_index in kf.split(X_new):
     print("The overall model running time is {0:.2f} seconds \n".format(final_time))
     
     runtime.append(final_time)
+    results.append(AUC)
 
 print("The {} data was divided in {} slots \n".format(data_name, split_size))
 

@@ -8,8 +8,8 @@ data4 = Haberman’s Survival
 from graph_parallel_functions import *
 
 data_name = "Habermans Survival"
-result_name = "Result_Data4_16.csv"
-runtime_name = "Runtime_data4_16.csv"
+result_name = "Result_Data4_parallel_16.csv"
+runtime_name = "Runtime_data4_16_parallel.csv"
 
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/haberman/haberman.data'
 data = pd.read_csv(url, sep=',', header=None, skiprows=1)
@@ -79,6 +79,7 @@ for train_index, test_index in kf.split(X_new):
     print("The overall model running time is {0:.2f} seconds \n".format(final_time))
     
     runtime.append(final_time)
+    results.append(AUC)
 
 print("The {} data was divided in {} slots \n".format(data_name, split_size))
 

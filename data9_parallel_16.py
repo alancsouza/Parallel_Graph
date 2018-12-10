@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-data2 = Australian credit
-"""
+data9 = Liver disorders
 
+"""
 from graph_parallel_functions import *
 
-data_name = "Australian credit"
-result_name = "Result_Data2_parallel_16.csv"
-runtime_name = "Runtime_data2_16_parallel.csv"
+data_name = "Liver disorders"
+result_name = "Result_Data9_parallel_64.csv"
+runtime_name = "Runtime_data9_parallel_64.csv"
 
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
-
-data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+url = 'https://raw.githubusercontent.com/je-nunez/testing_WEKA_ml_on_BUPA/master/bupa_liver_disorders.csv'
+data1 = pd.read_csv(url)
+data = data1.copy()
+data.info()
 
 # setting data precision  
-precisionX = 'float16'
-precisionY = 'int8'
+precisionX = 'float64'
+precisionY = 'int64'
 
-X = data.iloc[:,:-1]
+X = data.loc[:,'mcv' : 'gammagt']
 min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-1, 1)) # Normalizing data between -1 and 1
 X = pd.DataFrame(min_max_scaler.fit_transform(X))
 X = X.astype(precisionX)
 X_type = X.dtypes
 
-y = data.iloc[:,-1].copy()
-
-y[y == 0] = -1
+y = data.loc[:,'drinks'].copy()
+y[y<3] = -1
+y[y>=3] = 1
+y = pd.DataFrame(y)
 y = y.astype(precisionY)
 y_type = y.dtypes
 
@@ -39,7 +41,7 @@ Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
 X_new, y_new = remove_noise(X, y, Adj_matrix, float_type = precisionX)
 
 # Implementing kfold cross validation:
-k = 10
+k = 4
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []

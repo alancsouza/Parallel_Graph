@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-data2 = Australian credit
-"""
+data7 = Climate M. S. C.
 
+"""
 from graph_parallel_functions import *
 
-data_name = "Australian credit"
-result_name = "Result_Data2_parallel_16.csv"
-runtime_name = "Runtime_data2_16_parallel.csv"
+data_name = "Climate M. S. C."
+result_name = "Result_Data7_parallel_16.csv"
+runtime_name = "Runtime_data7_parallel_16.csv"
 
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
-
-data = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00252/pop_failures.dat'
+data1 = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
+data = data1.iloc[:,2:].copy()
 
 # setting data precision  
 precisionX = 'float16'
@@ -24,13 +24,11 @@ X = pd.DataFrame(min_max_scaler.fit_transform(X))
 X = X.astype(precisionX)
 X_type = X.dtypes
 
-y = data.iloc[:,-1].copy()
-
-y[y == 0] = -1
-y = y.astype(precisionY)
+y = data.iloc[:,-1].astype(precisionY)
+y[y==0] = -1
 y_type = y.dtypes
 
-print("The {} dataset has {} samples and its bit precision is {} for the X data and {} for y data".format(data_name, X.shape[0], X_type[1], y_type ))
+print("The {} dataset has {} samples and its bit precision is {} for the X data and {} for y data".format(data_name, X.shape[0], X_type[3], y_type ))
 
 # Computing the Adjacency Matrix:
 Adj_matrix = get_adjacency(X, int_type = precisionY, float_type = precisionX)
