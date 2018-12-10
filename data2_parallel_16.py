@@ -1,12 +1,12 @@
-!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-data2 = Australina credit
+data2 = Australian credit
 """
 
 from graph_parallel_functions import *
 
-data_name = "Australina credit"
+data_name = "Australian credit"
 result_name = "Result_Data2_16.csv"
 runtime_name = "Runtime_data2_16.csv"
 url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat'
