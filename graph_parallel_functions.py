@@ -180,7 +180,10 @@ def classify_data(X_test, y_test, arestas_suporte, int_type):
 # Performance measure using AUC
 def compute_AUC(y_test, y_hat):
   fpr, tpr, _ = roc_curve(y_test, y_hat)
-  roc_auc = auc(fpr, tpr)
+  if fpr.shape[0] < 2 or tpr.shape[0] < 2:
+      roc_auc = float('nan')
+  else:
+      roc_auc = auc(fpr, tpr)
   
   return roc_auc
 
