@@ -149,8 +149,10 @@ def get_arestas_suporte(X, y, borda, Adj_matrix, int_type):
   return X_suporte, y_suporte
 
 # Another support edges function that contains the other functions
-def support_edges(X_train, y_train, float_type, int_type):
-  
+def support_edges(data, float_type, int_type):
+    
+  X_train = data.iloc[:,:-1]
+  y_train = data.iloc[:, -1]
   Adj_matrix = get_adjacency(X_train, int_type, float_type)
   
   borda = get_borda(y_train, Adj_matrix, int_type)
