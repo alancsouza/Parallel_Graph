@@ -1,5 +1,3 @@
-
-
 # -*- coding: utf-8 -*-
 # Importing LIbraries
 import numpy as np
@@ -14,10 +12,16 @@ from sklearn import preprocessing
 import random
 import time
 import copy
+import concurrent.futures
 random.seed(1)
 
+# setting data precision as global variables
+float_type = 'float16'
+int_type = 'int8'
+
+
 # Computing the adjacency matrix
-def get_adjacency(X, int_type, float_type):
+def get_adjacency(X):
   dist_matrix = distance_matrix(X,X) # The data type depends on X
   Adj_matrix = np.zeros(shape = dist_matrix.shape, dtype = int_type)
   nrow = dist_matrix.shape[0]
@@ -42,7 +46,11 @@ def get_adjacency(X, int_type, float_type):
   return Adj_matrix
 
 # Removing overlapping samples:
-def remove_noise(X, y, Adj_matrix, float_type):
+def remove_noise(X, y):
+
+  # Compute Adjacency matrix
+  Adj_matrix = get_adjacency(X)
+
   c1 = np.asarray(np.where(y==1)).ravel()
   c2 = np.asarray(np.where(y==-1)).ravel()
   A1 = Adj_matrix[:,c1].sum(axis = 0) # sum over columns
@@ -77,11 +85,28 @@ def remove_noise(X, y, Adj_matrix, float_type):
   y_new = y.drop(noise)
   
   print("{} samples where removed from the data. \n".format(X.shape[0]-X_new.shape[0]))
-  
+  print("The data set now has {} samples ".format(X.shape[0]))
+
   return X_new, y_new
 
+# Split the data for concurrent computing
+def split(X_train, y_train):
+    # define the slot size
+    if X_train.shape[0] > 400:
+        split_size = round(X_train.shape[0]/100)
+    else:
+        split_size = round(X_train.shape[0]/50)
+
+    data_train = np.c_[X_train, y_train]
+    np.random.shuffle(data_train)
+
+    data_split = np.array_split(data_train, split_size)
+
+    return data_split, split_size
+
+
 # Finding the separation border:
-def get_borda(y, Adj_matrix, int_type):
+def get_borda(y, Adj_matrix):
   y_t = pd.DataFrame(y).T
   
   ncol = y_t.shape[1]
@@ -97,7 +122,7 @@ def get_borda(y, Adj_matrix, int_type):
   return borda
 
 # Finding the support edges:
-def get_arestas_suporte(X, y, borda, Adj_matrix, int_type):
+def get_arestas_suporte(X, y, borda, Adj_matrix):
   
   X = np.asarray(X)
   y_t = pd.DataFrame(y).T
@@ -149,14 +174,16 @@ def get_arestas_suporte(X, y, borda, Adj_matrix, int_type):
   return X_suporte, y_suporte
 
 # Another support edges function that contains the other functions
-def support_edges(data, float_type, int_type):
-    
+def support_edges(data):  
+
+  if not isinstance(data, pd.DataFrame):
+    data = pd.DataFrame(data)   
   X_train = data.iloc[:,:-1]
   y_train = data.iloc[:, -1]
-  Adj_matrix = get_adjacency(X_train, int_type, float_type)
+  Adj_matrix = get_adjacency(X_train)
   
-  borda = get_borda(y_train, Adj_matrix, int_type)
-  X_suporte, y_suporte = get_arestas_suporte(X_train, y_train, borda, Adj_matrix, int_type)
+  borda = get_borda(y_train, Adj_matrix)
+  X_suporte, y_suporte = get_arestas_suporte(X_train, y_train, borda, Adj_matrix)
   
   arestas_suporte = np.c_[X_suporte, y_suporte]
   if arestas_suporte.shape[0] > 0:
@@ -165,7 +192,7 @@ def support_edges(data, float_type, int_type):
   return arestas_suporte
 
 # Classification
-def classify_data(X_test, y_test, arestas_suporte, int_type):
+def classify_data(X_test, y_test, arestas_suporte):
   
   X_suporte = arestas_suporte[:,:-1]
   #y_suporte = arestas_suporte[:,-1]
@@ -192,7 +219,7 @@ def compute_AUC(y_test, y_hat):
   return roc_auc
 
 # Parallel graph method:
-def parallel_graph(X_train, y_train, split_size, float_precision, int_precision):
+def parallel_graph(X_train, y_train, split_size):
   data_train = np.c_[X_train, y_train]
   np.random.shuffle(data_train)
 
@@ -205,7 +232,7 @@ def parallel_graph(X_train, y_train, split_size, float_precision, int_precision)
     y_train = data.iloc[:, -1]
 
     # Finding the support edges from this slot of data:
-    arestas_suporte = support_edges(X_train, y_train, float_precision, int_precision)
+    arestas_suporte = support_edges(X_train, y_train, float_type, int_type)
 
     arestas_suporte_final.append(arestas_suporte)
     
