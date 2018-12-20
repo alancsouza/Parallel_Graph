@@ -34,7 +34,7 @@ print("The {} dataset has {} samples and its bit precision is {} for the X data 
 X_new, y_new = remove_noise(X, y)
 
 # Implementing kfold cross validation:
-k = 4
+k = 10
 
 kf = KFold(n_splits=k, shuffle = True, random_state = 1)
 results = []
