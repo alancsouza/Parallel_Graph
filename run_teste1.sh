@@ -1,4 +1,7 @@
-
+python data1_parallel_16.py
+python data2_parallel_16.py
+python data3_parallel_16.py
+python data4_parallel_16.py
 python data5_parallel_16.py
 python data6_parallel_16.py
 python data7_parallel_16.py
