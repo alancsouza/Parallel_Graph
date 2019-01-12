@@ -8,7 +8,7 @@ from functions_16 import *
 
 data_name = "Climate M. S. C."
 result_name = "Result_Data7_parallel_16.csv"
-runtime_name = "Runtime_data7_parallel_16.csv"
+runtime_name = "Runtime_data7_16_parallel.csv"
 
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00252/pop_failures.dat'
 data1 = pd.read_csv(url, sep='\s+', header=None, skiprows=1)
