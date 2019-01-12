@@ -10,7 +10,7 @@ from functions_16 import *
 
 data_name = "German Credit."
 result_name = "Result_Data8_parallel_16.csv"
-runtime_name = "Runtime_data8_parallel_16.csv"
+runtime_name = "Runtime_data8_16_parallel.csv"
 
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data-numeric'
 data = pd.read_fwf(url, header = None)
