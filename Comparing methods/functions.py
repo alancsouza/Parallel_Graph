@@ -318,10 +318,10 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
 
     results = []
 
-    for train_index, test_index in kf.split(X_new):
+    for train_index, test_index in kf.split(X):
 
-      X_train, X_test = X_new.iloc[train_index], X_new.iloc[test_index]
-      y_train, y_test = y_new.iloc[train_index], y_new.iloc[test_index]
+      X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+      y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
       if method == "parallel" :
         start = time.time() 
