@@ -1,16 +1,19 @@
 from functions import *
 
-data_name = "Habermans Survival"
+data_name = "Fertility.csv"
 
-url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/haberman/haberman.data'
-data = pd.read_csv(url, sep=',', header=None, skiprows=1)
+# Processing the data
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00244/fertility_Diagnosis.txt'
+data = pd.read_csv(url, header = None)
 
 X = data.iloc[:,:-1]
 min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-1, 1)) # Normalizing data between -1 and 1
 X = pd.DataFrame(min_max_scaler.fit_transform(X))
 
 y = data.iloc[:,-1].copy()
-y[y == 2] = -1
+y = y.astype('category')
+y = y.cat.codes
+y[y == 0] = -1
 
 # Filtering data:
 X_new, y_new = remove_noise(X, y)
@@ -37,6 +40,3 @@ for model in method:
   f.write('\n')
   
 f.close()
-
-
-

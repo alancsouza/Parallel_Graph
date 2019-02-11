@@ -11,7 +11,7 @@ import random
 import time
 import copy
 import concurrent.futures
-import jason
+import json
 random.seed(1)
 
 # Compute Adjacency matrix for the Grabriel Graph
