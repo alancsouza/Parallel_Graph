@@ -1,7 +1,7 @@
 from functions import *
 
 # starting script:
-with open('results.txt', 'w') as f:
+with open('results.txt', 'w+') as f:
   f.write('Starting tests: \n\n')
 
 data_name = "Banknote Auth."
