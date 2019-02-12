@@ -1,9 +1,5 @@
 from functions import *
 
-# starting script:
-with open('results.txt', 'w+') as f:
-  f.write('Starting tests: \n\n')
-
 data_name = "Banknote Auth."
 
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00267/data_banknote_authentication.txt"
@@ -19,26 +15,6 @@ y[y == 0] = -1
 # Filtering data:
 X_new, y_new = remove_noise(X, y)
 
-# Comparing methods:
-method = ["nn_clas", "parallel", "pseudo_support_edges"]
+data = pd.concat([X_new, y_new], axis=1)
 
-print("Dataset: {}".format(data_name))
-
-f = open("results.txt", "a")
-f.write("Dataset: %s\r\n" % data_name)
-
-for model in method:
-  print("Entrou aki")
-  y_hat, y_test, result, runtime = chip_clas(X_new, y_new, method = model, kfold = 10)
-  
-  print(" \n Method: {0} \n Avarege AUC: {1:.4f} \n Std. Deviation {2:.4f} \n Avarege Runtime: {3:.4f} \n".format(model, result.mean()[0], result.std()[0], runtime.mean()[0]))
-
-  results = {'Method': model,
-          'Avarege AUC': result.mean()[0],
-          'Std deviation': result.std()[0],
-          'Avarege runtime': runtime.mean()[0]}
-  
-  json.dump(results, f)
-  f.write('\n')
-  
-f.close()
+data.to_csv('data1.csv')
