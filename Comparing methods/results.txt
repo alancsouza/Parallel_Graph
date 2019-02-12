@@ -1,17 +1,2 @@
 Starting tests: 
 
-Dataset: Banknote Auth.
-{"Method": "nn_clas", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 1269.0139850854873}
-{"Method": "parallel", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 316.88245394229887}
-{"Method": "pseudo_support_edges", "Avarege AUC": 0.7134845689307548, "Std deviation": 0.15799574531135577, "Avarege runtime": 0.006636357307434082}
-Dataset: Australian credit
-{"Method": "nn_clas", "Avarege AUC": 0.7719506286620804, "Std deviation": 0.055993497519285014, "Avarege runtime": 172.31029684543608}
-{"Method": "parallel", "Avarege AUC": 0.7719506286620804, "Std deviation": 0.055993497519285014, "Avarege runtime": 173.27608361244202}
-{"Method": "pseudo_support_edges", "Avarege AUC": 0.37907905157577054, "Std deviation": 0.1388733832685788, "Avarege runtime": 0.005984687805175781}
-Dataset: Fertility.csv
-{"Method": "nn_clas", "Avarege AUC": 0.7621794871794872, "Std deviation": 0.19355684047094968, "Avarege runtime": 2.0793108344078064}
-{"Method": "parallel", "Avarege AUC": 0.7621794871794872, "Std deviation": 0.19355684047094968, "Avarege runtime": 3.896891415119171}
-Dataset: Habermans Survival
-{"Method": "nn_clas", "Avarege AUC": 0.504769323418517, "Std deviation": 0.025900085089920435, "Avarege runtime": 18.18007504940033}
-{"Method": "parallel", "Avarege AUC": 0.5318526567518502, "Std deviation": 0.02187461366145499, "Avarege runtime": 12.206252932548523}
-{"Method": "pseudo_support_edges", "Avarege AUC": 0.4583682446585673, "Std deviation": 0.1226509072333784, "Avarege runtime": 0.005630373954772949}
