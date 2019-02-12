@@ -304,9 +304,9 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
 
   """
     Available methods:
-    parallel: Implements concurrent futures and parallelization technique
-    nn_clas: Implements nn_clas classification
-    pseudo_support_edges = Implements pseudo_support method
+    "parallel": Implements concurrent futures and parallelization technique
+    "nn_clas": Implements nn_clas classification
+    "pseudo_support_edges" = Implements pseudo_support method
 
   """
 
