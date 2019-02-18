@@ -232,31 +232,49 @@ def parallel_graph(X_train, y_train, split_size):
   
   return X_train_new, y_train_new
 
-def compute_pseudo_support_edges(data, scale_factor = 10):
+def compute_extreme_search(data, scale_factor = 10, k = 5):
+  
+  '''
+  parameters:
+  scale_factor: integer that will divide the data set and choose the amount of samples from each class
+  k: how many samples will be saved from the data (Nearest and distant samples)
+  '''
   # separating the lables
   c1 = data[data.iloc[:,-1] ==  1]
   c2 = data[data.iloc[:,-1] == -1]
 
+  c1_x = c1.iloc[:,:-1]
+  c2_x = c2.iloc[:,:-1]
+
   # Choosing one random reference sample from each class
-  c1_reference = c1.sample(n = 1)
-  c2_reference = c2.sample(n = 1)
+  c1_reference = c1_x.sample(n = int(c1.shape[0]/scale_factor))
+  c2_reference = c2_x.sample(n = int(c2.shape[0]/scale_factor))
 
   # Compute the distance matrix between each sample and the opposite class
-  dist_c1 = distance_matrix(c2_reference, c1)
-  dist_c2 = distance_matrix(c1_reference, c2)
+  dist_c1 = spatial.distance_matrix(c2_reference, c1_x)
+  dist_c2 = spatial.distance_matrix(c1_reference, c2_x)
 
-  n_edges  = int(data.shape[0] / scale_factor)  # number of pseudo support edges 
+  dist_c1_idx = np.argsort(dist_c1, axis = 1)
+  dist_c2_idx = np.argsort(dist_c2, axis = 1)
+
+  idx1_min = dist_c1_idx[:, :k].ravel() # ravel transforms a 2D column into 1D
+  idx1_max = dist_c1_idx[:, -k:].ravel() 
+
+  idx2_min = dist_c2_idx[:, :k].ravel() # ravel transforms a 2D column into 1D
+  idx2_max = dist_c2_idx[:, -k:].ravel() 
+
+  idx1 = np.r_[idx1_min, idx1_max]
+  idx1 = np.unique(idx1)
+
+  idx2 = np.r_[idx2_min, idx2_max]
+  idx2 = np.unique(idx2)
+
+  new_c1 = c1.iloc[idx1,:]
+  new_c2 = c2.iloc[idx2,:]
+
+  new_data = pd.concat([new_c1, new_c2], axis = 0)
   
-  # Indices from the n smallests support edges
-  idx_c1 = np.argpartition(dist_c1, n_edges) 
-  idx_c2 = np.argpartition(dist_c2, n_edges) 
-
-  c1_support_edges = c1.iloc[idx_c1[0,:n_edges]]
-  c2_support_edges = c2.iloc[idx_c2[0,:n_edges]]
-
-  pseudo_support_edges = np.array(pd.concat([c1_support_edges, c2_support_edges]))
-
-  return pseudo_support_edges
+  return new_data
 
 # Gabriel Graph classifier using nn_clas method
 def nn_clas(X_train, y_train, X_test, y_test):
@@ -291,10 +309,11 @@ def parallel_concurrent(X_train, y_train, X_test, y_test):
 
   return y_hat
 
-def pseudo_support_edges(X_train, y_train, X_test, y_test):
+def extreme_search(X_train, y_train, X_test, y_test):
   
   data_train = pd.concat([X_train, y_train], axis = 1)
-  support_edges = compute_pseudo_support_edges(data_train, 10) #ToDo: optmize the number of edges
+  new_data = compute_extreme_search(data_train, scale_factor=10, k = 5)
+  support_edges = support_edges(new_data)
   y_hat = classify_data(X_test, y_test, support_edges)
 
   return y_hat
@@ -306,7 +325,7 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
     Available methods:
     "parallel": Implements concurrent futures and parallelization technique
     "nn_clas": Implements nn_clas classification
-    "pseudo_support_edges" = Implements pseudo_support method
+    "extreme_search" = Implements data reduction technique
 
   """
 
@@ -333,7 +352,7 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
         y_hat  = nn_clas(X_train, y_train, X_test, y_test)
         end = time.time()
 
-      elif method == "pseudo_support_edges" :
+      elif method == "extreme_search" :
         start = time.time()
         y_hat = pseudo_support_edges(X_train, y_train, X_test, y_test)
         end = time.time()
