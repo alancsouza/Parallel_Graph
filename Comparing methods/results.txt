@@ -1,2 +1,9 @@
 Starting tests: 
 
+Dataset: Banknote Auth.
+{"Method": "pseudo_support_edges", "Avarege AUC": 0.6750835947572804, "Std deviation": 0.14499419939096458, "Avarege runtime": 0.011715364456176759}
+Dataset: Australian credit
+{"Method": "pseudo_support_edges", "Avarege AUC": 0.4244444892096831, "Std deviation": 0.09734295602086891, "Avarege runtime": 0.005917572975158691}
+Dataset: Fertility.csv
+Dataset: Habermans Survival
+{"Method": "pseudo_support_edges", "Avarege AUC": 0.4483421484429549, "Std deviation": 0.04457709712952275, "Avarege runtime": 0.007238209247589111}
