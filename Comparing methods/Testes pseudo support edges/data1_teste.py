@@ -23,6 +23,6 @@ y[y == 0] = -1
 # Filtering data:
 X_new, y_new = remove_noise(X, y)
 
-y_hat, y_test, result, runtime = chip_clas(X_new, y_new, method = "pseudo_support_edges", kfold = 10)
+y_hat, y_test, result, runtime = chip_clas(X_new, y_new, method = "extreme_search", kfold = 10)
   
 print(" \n Method: {0} \n Avarege AUC: {1:.4f} \n Std. Deviation {2:.4f} \n Avarege Runtime: {3:.4f} \n".format("pseudo_support_edges", result.mean()[0], result.std()[0], runtime.mean()[0]))

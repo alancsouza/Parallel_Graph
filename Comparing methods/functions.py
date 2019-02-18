@@ -11,7 +11,6 @@ import random
 import time
 import copy
 import concurrent.futures
-import json
 random.seed(1)
 
 # Compute Adjacency matrix for the Grabriel Graph
@@ -251,8 +250,8 @@ def compute_extreme_search(data, scale_factor = 10, k = 5):
   c2_reference = c2_x.sample(n = int(c2.shape[0]/scale_factor))
 
   # Compute the distance matrix between each sample and the opposite class
-  dist_c1 = spatial.distance_matrix(c2_reference, c1_x)
-  dist_c2 = spatial.distance_matrix(c1_reference, c2_x)
+  dist_c1 = distance_matrix(c2_reference, c1_x)
+  dist_c2 = distance_matrix(c1_reference, c2_x)
 
   dist_c1_idx = np.argsort(dist_c1, axis = 1)
   dist_c2_idx = np.argsort(dist_c2, axis = 1)
@@ -313,8 +312,8 @@ def extreme_search(X_train, y_train, X_test, y_test):
   
   data_train = pd.concat([X_train, y_train], axis = 1)
   new_data = compute_extreme_search(data_train, scale_factor=10, k = 5)
-  support_edges = support_edges(new_data)
-  y_hat = classify_data(X_test, y_test, support_edges)
+  support = support_edges(new_data)
+  y_hat = classify_data(X_test, y_test, support)
 
   return y_hat
 
@@ -354,7 +353,7 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
 
       elif method == "extreme_search" :
         start = time.time()
-        y_hat = pseudo_support_edges(X_train, y_train, X_test, y_test)
+        y_hat = extreme_search(X_train, y_train, X_test, y_test)
         end = time.time()
 
       else :
@@ -380,8 +379,8 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
     elif method == "nn_clas":
       y_hat  = nn_clas(X_train, y_train, X_test, y_test)
 
-    elif method == "pseudo_support_edges":
-      y_hat = pseudo_support_edges(X_train, y_train, X_test, y_test)
+    elif method == "extreme_search":
+      y_hat = extreme_search(X_train, y_train, X_test, y_test)
 
     else :
       print("Method not available")
