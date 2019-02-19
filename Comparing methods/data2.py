@@ -17,7 +17,7 @@ y[y == 0] = -1
 X_new, y_new = remove_noise(X, y)
 
 # Comparing methods:
-method = ["nn_clas", "parallel", "pseudo_support_edges"]
+method = ["nn_clas", "parallel", "extreme_search"]
 
 print("Dataset: {}".format(data_name))
 
