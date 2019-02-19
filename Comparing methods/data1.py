@@ -1,4 +1,7 @@
-from functions import *
+from functions import chip_clas, remove_noise
+import pandas as pd
+from sklearn import preprocessing
+import json
 
 # starting script:
 with open('results.txt', 'w+') as f:
@@ -20,8 +23,7 @@ y[y == 0] = -1
 X_new, y_new = remove_noise(X, y)
 
 # Comparing methods:
-#method = ["nn_clas", "parallel", "pseudo_support_edges"]
-method = ["pseudo_support_edges"]
+method = ["nn_clas", "parallel", "extreme_search"]
 
 print("Dataset: {}".format(data_name))
 
