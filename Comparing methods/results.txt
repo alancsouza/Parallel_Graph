@@ -5,3 +5,22 @@ Dataset: Banknote Auth.
 {"Method": "parallel", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 316.02090587615965}
 {"Method": "extreme_search", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 37.87363567352295}
 
+Dataset: Australian credit
+{"Method": "nn_clas", "Avarege AUC": 0.7719506286620804, "Std deviation": 0.055993497519285014, "Avarege runtime": 170.10627171993255}
+
+{"Method": "parallel", "Avarege AUC": 0.7719506286620804, "Std deviation": 0.055993497519285014, "Avarege runtime": 173.7132314682007}
+
+{"Method": "extreme_search", "Avarege AUC": 0.5885209323893029, "Std deviation": 0.08226137458353651, "Avarege runtime": 32.592475581169126}
+
+Dataset: Fertility.csv
+{"Method": "nn_clas", "Avarege AUC": 0.75, "Std deviation": 0.2041241452319315, "Avarege runtime": 2.9485209226608275}
+
+{"Method": "parallel", "Avarege AUC": 0.75, "Std deviation": 0.2041241452319315, "Avarege runtime": 5.480955123901367}
+
+Dataset: Habermans Survival
+{"Method": "nn_clas", "Avarege AUC": 0.467032412032412, "Std deviation": 0.12671097283179233, "Avarege runtime": 25.641920590400694}
+
+{"Method": "parallel", "Avarege AUC": 0.4869146131646132, "Std deviation": 0.12227742546923319, "Avarege runtime": 17.594692277908326}
+
+{"Method": "extreme_search", "Avarege AUC": 0.453455710955711, "Std deviation": 0.13099092932014622, "Avarege runtime": 3.9461389541625977}
+
