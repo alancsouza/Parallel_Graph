@@ -69,8 +69,8 @@ def remove_noise(X, y):
   X_new = X.drop(noise)
   y_new = y.drop(noise)
   
-  #print("{} samples where removed from the data. \n".format(X.shape[0]-X_new.shape[0]))
-  #print("The data set now has {} samples ".format(X.shape[0]))
+  print("{} samples where removed from the data. \n".format(X.shape[0]-X_new.shape[0]))
+  print("The data set now has {} samples ".format(X.shape[0]))
 
   return X_new, y_new
 
