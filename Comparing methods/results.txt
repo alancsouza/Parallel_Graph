@@ -1,6 +1,9 @@
 Starting tests: 
 
 Dataset: Banknote Auth.
-{"Method": "nn_clas", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 1256.971317744255}
-{"Method": "parallel", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 310.64749133586884}
-{"Method": "extreme_search", "Avarege AUC": 0.9958882783882783, "Std deviation": 0.00781350751262203, "Avarege runtime": 35.12289769649506}
+{"Method": "nn_clas", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 1271.3196149349212}
+{"Method": "parallel", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 316.02090587615965}
+{"Method": "extreme_search", "Avarege AUC": 1.0, "Std deviation": 0.0, "Avarege runtime": 37.87363567352295}
+Dataset: Australian credit
+Dataset: Fertility.csv
+Dataset: Habermans Survival
