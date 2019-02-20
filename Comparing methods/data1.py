@@ -41,6 +41,6 @@ for model in method:
           'Avarege runtime': runtime.mean()[0]}
   
   json.dump(results, f)
-  f.write('\n')
+  f.write('\n\n')
   
 f.close()
