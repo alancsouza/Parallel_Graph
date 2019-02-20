@@ -24,3 +24,10 @@ Dataset: Habermans Survival
 
 {"Method": "extreme_search", "Avarege AUC": 0.453455710955711, "Std deviation": 0.13099092932014622, "Avarege runtime": 3.9461389541625977}
 
+Dataset: German Credit.
+{"Method": "nn_clas", "Avarege AUC": 0.6246873808422849, "Std deviation": 0.05574865178417676, "Avarege runtime": 333.74444673061373}
+
+{"Method": "parallel", "Avarege AUC": 0.6246873808422849, "Std deviation": 0.05574865178417676, "Avarege runtime": 348.4410955667496}
+
+{"Method": "extreme_search", "Avarege AUC": 0.5390076005953268, "Std deviation": 0.05601660260120686, "Avarege runtime": 54.18136749267578}
+
