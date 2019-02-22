@@ -36,15 +36,17 @@ def get_adjacency(X):
 
 # Removing overlapping samples:
 def remove_noise(X, y):
+  data = pd.concat([X,y], axis = 1)
+  
   Adj_matrix = get_adjacency(X)
 
-  c1 = np.asarray(np.where(y==1)).ravel()
-  c2 = np.asarray(np.where(y==-1)).ravel()
+  c1 ,c2 = separete_labels(data)
+
   A1 = Adj_matrix[:,c1].sum(axis = 0) # sum over columns
   A2 = Adj_matrix[:,c2].sum(axis = 0)
-  
-  
+    
   M = pd.DataFrame(Adj_matrix)
+
   adj_1 = np.asarray(M.iloc[c1,c1])
   adj_2 = np.asarray(M.iloc[c2,c2])
 
@@ -70,7 +72,7 @@ def remove_noise(X, y):
   y_new = y.drop(noise)
   
   print("{} samples where removed from the data. \n".format(X.shape[0]-X_new.shape[0]))
-  print("The data set now has {} samples ".format(X.shape[0]))
+  print("The data set now has {} samples ".format(X_new.shape[0]))
 
   return X_new, y_new
 
@@ -231,6 +233,13 @@ def parallel_graph(X_train, y_train, split_size):
   
   return X_train_new, y_train_new
 
+def separete_labels(data):
+  c1 = data[data.iloc[:,-1] ==  1]
+  c2 = data[data.iloc[:,-1] == -1]
+
+  return c1, c2
+
+
 def compute_extreme_search(data, scale_factor = 10, k = 5):
   
   '''
@@ -239,8 +248,7 @@ def compute_extreme_search(data, scale_factor = 10, k = 5):
   k: how many samples will be saved from the data (Nearest and distant samples)
   '''
   # separating the lables
-  c1 = data[data.iloc[:,-1] ==  1]
-  c2 = data[data.iloc[:,-1] == -1]
+  c1, c2 = separete_labels(data)
 
   c1_x = c1.iloc[:,:-1]
   c2_x = c2.iloc[:,:-1]
