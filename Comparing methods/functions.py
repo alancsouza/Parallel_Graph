@@ -34,47 +34,61 @@ def get_adjacency(X):
           
   return Adj_matrix
 
+def separate_labels(data):
+  c1 = data[data.iloc[:,-1] ==  1]
+  c2 = data[data.iloc[:,-1] == -1]
+
+  return c1, c2
+
+
 # Removing overlapping samples:
 def remove_noise(X, y):
-  data = pd.concat([X,y], axis = 1)
   
+  data = pd.concat([X, y], axis = 1)
   Adj_matrix = get_adjacency(X)
+  
+  # getting the indices from each class
+  c1_idx = np.asarray(data.index[data.iloc[:,-1] == 1])
+  c2_idx = np.asarray(data.index[data.iloc[:,-1] == -1])
+  
+  # Computing the vertex degree (A) for each class
+  A1 = Adj_matrix[:,c1_idx].sum(axis = 0) 
+  A2 = Adj_matrix[:,c2_idx].sum(axis = 0)
+  
+  # Computing A_hat which is the number of edges connected to the vertex that are from the same class
+  Adj_matrix = pd.DataFrame(Adj_matrix)
+  Adj_1 = Adj_matrix.iloc[c1_idx,c1_idx]
+  Adj_2 = Adj_matrix.iloc[c2_idx,c2_idx]
 
-  c1 ,c2 = separete_labels(data)
-
-  A1 = Adj_matrix[:,c1].sum(axis = 0) # sum over columns
-  A2 = Adj_matrix[:,c2].sum(axis = 0)
-    
-  M = pd.DataFrame(Adj_matrix)
-
-  adj_1 = np.asarray(M.iloc[c1,c1])
-  adj_2 = np.asarray(M.iloc[c2,c2])
-
-  A1h = adj_1.sum(axis = 0)
-  A2h = adj_2.sum(axis = 0)
+  A1_hat = Adj_1.sum(axis = 0)
+  A2_hat = Adj_2.sum(axis = 0)
   
   #Computing the quality coefficient Q for each class
-  Q_class1 = A1h / A1
-  Q_class2 = A2h / A2
+  Q1 = A1_hat / A1
+  Q2 = A2_hat / A2
 
   # Computing the threshold value t for each class
-  t_class1 = sum(Q_class1) / Q_class1.shape[0]
-  t_class2 = sum(Q_class2) / Q_class2.shape[0]
-  
-  noise_c1 = np.where(Q_class1 < t_class1)
-  noise_c2 = np.where(Q_class2 < t_class2)
-  noise_data = np.c_[noise_c1, noise_c2]
+  t1 = sum(Q1) / Q1.shape[0]
+  t2 = sum(Q2) / Q2.shape[0]
 
-  noise = noise_data.ravel()
-  
-  # Filtering the data
-  X_new = X.drop(noise)
-  y_new = y.drop(noise)
-  
-  print("{} samples where removed from the data. \n".format(X.shape[0]-X_new.shape[0]))
-  print("The data set now has {} samples ".format(X_new.shape[0]))
+  # getting the indices the are below the threshold
+  noise_c1 = np.asarray(np.where(Q1 < t1)).ravel()
+  noise_c2 = np.asarray(np.where(Q2 < t2)).ravel()
 
-  return X_new, y_new
+  noise_c1_idx = c1_idx[noise_c1]
+  noise_c2_idx = c2_idx[noise_c2]
+
+  # removing the samples that can be considered a noise
+  noise_idx = np.r_[noise_c1_idx, noise_c2_idx]
+  new_data = data.drop(noise_idx)
+  
+  new_X = new_data.iloc[:,:-1]
+  new_y = new_data.iloc[:,-1]
+  
+  print("{} samples where removed from the data. \n".format(data.shape[0]-new_data.shape[0]))
+  print("The data set now has {} samples ".format(new_data.shape[0]))
+  
+  return new_X, new_y
 
 # Split the data for concurrent computing
 def split(X_train, y_train):
@@ -233,13 +247,6 @@ def parallel_graph(X_train, y_train, split_size):
   
   return X_train_new, y_train_new
 
-def separete_labels(data):
-  c1 = data[data.iloc[:,-1] ==  1]
-  c2 = data[data.iloc[:,-1] == -1]
-
-  return c1, c2
-
-
 def compute_extreme_search(data, scale_factor = 10, k = 5):
   
   '''
@@ -248,7 +255,8 @@ def compute_extreme_search(data, scale_factor = 10, k = 5):
   k: how many samples will be saved from the data (Nearest and distant samples)
   '''
   # separating the lables
-  c1, c2 = separete_labels(data)
+  c1 = data[data.iloc[:,-1] ==  1]
+  c2 = data[data.iloc[:,-1] == -1]
 
   c1_x = c1.iloc[:,:-1]
   c2_x = c2.iloc[:,:-1]
@@ -403,6 +411,31 @@ def chip_clas(X, y, method , kfold = 10, test_size = 0.2):
   return y_hat, y_test, results, runtime
 
 
-
-
+def generate_data(d, nrow, mean1, mean2, sd1, sd2, plot=False):
   
+  cov1 = np.diag(np.repeat(sd1,d))  # diagonal covariance
+  cov2 = np.diag(np.repeat(sd2,d))
+  X1 = np.random.multivariate_normal(np.repeat(mean1, d), cov1, nrow)
+  X2 = np.random.multivariate_normal(np.repeat(mean2, d), cov2, nrow)
+  
+  y1 = np.repeat(1, nrow)
+  y2 = np.repeat(-1, nrow)
+
+  X = pd.DataFrame(np.r_[X1,X2])
+  y = pd.DataFrame(np.r_[y1,y2])
+
+  if plot:
+    plot_2d(X, y)
+  
+  return X, y
+
+def plot_2d(X, y):
+  data = pd.concat([X, y], axis = 1)  
+  c1, c2 = separate_labels(data)
+  plt.scatter(c1.iloc[:,0],c1.iloc[:,1], marker='v', color='r')
+  plt.scatter(c2.iloc[:,0],c2.iloc[:,1])
+  plt.title('Data distribuition')
+  plt.axis('equal')
+  plt.show()
+  
+  return None  
